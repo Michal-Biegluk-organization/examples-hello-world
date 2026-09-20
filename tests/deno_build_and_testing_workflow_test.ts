@@ -146,3 +146,12 @@ Deno.test("workflow test command resolves to a declared Deno task", async () => 
   );
   assertMatch(testTask, /(?:^|\s)deno\s+test(?:\s|$)/);
 });
+
+Deno.test("workflow validation cannot enter watch or debug mode", async () => {
+  const workflow = await readWorkflow();
+
+  assert(
+    !/\s--(?:watch|inspect|inspect-brk)(?:=|\s|$)/.test(workflow),
+    "CI validation commands must terminate without waiting for input",
+  );
+});
